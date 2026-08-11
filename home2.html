@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabores do Açaí</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* CSS específico desta tela mantendo a herança das cores e regras originais */
+        .sabores {
+            width: 90%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.349);
+            padding: 55px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.685);
+            position: relative;
+            z-index: 10;
+        }
+        .sabores h2 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .sabores p {
+            text-align: center;
+            color: #e4e0e0cb;
+            margin-bottom: 25px;
+        }
+        .opcoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .card {
+            background: #fafafa;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: .3s;
+        }
+        .card:hover {
+            border-color: #8e44ad;
+            transform: translateY(-3px);
+        }
+        .card span {
+            font-size: 16px;
+            font-weight: bold;
+            color: #5e2b84;
+        }
+        .card input[type="number"] {
+            width: 60px;
+            padding: 6px;
+            font-size: 18px;
+            text-align: center;
+            border: 2px solid #8e44ad;
+            border-radius: 8px;
+            outline: none;
+        }
+        .btn-finalizar {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 25px auto 0 auto;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #5d007a;
+            color: rgb(255, 255, 255);
+            font-size: 18px;
+            cursor: pointer;
+            text-align: center;
+            transition: .3s;
+        }
+        .btn-finalizar:hover {
+            background: #ac45ac;
+        }
+    </style>
+</head>
+<body>
+    <section class="sabores">
+        <h2>Escolha os Sabores</h2>
+        <p>Escolha a quantidade de cada adicional.</p>
+     
+        <div class="opcoes">
+            <div class="card">
+                <span>🍓 Morango (R$ 2,50)</span>
+                <input type="number" class="qtd-sabor" data-preco="2.50" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🍌 Banana (R$ 2,00)</span>
+                <input type="number" class="qtd-sabor" data-preco="2.00" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🥝 Kiwi (R$ 3,00)</span>
+                <input type="number" class="qtd-sabor" data-preco="3.00" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🥭 Manga (R$ 2,50)</span>
+                <input type="number" class="qtd-sabor" data-preco="2.50" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🍇 Uva (R$ 2,00)</span>
+                <input type="number" class="qtd-sabor" data-preco="2.00" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🍍 Abacaxi (R$ 2,00)</span>
+                <input type="number" class="qtd-sabor" data-preco="2.00" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🥜 Paçoca (R$ 1,50)</span>
+                <input type="number" class="qtd-sabor" data-preco="1.50" min="0" max="10" value="0">
+            </div>
+            <div class="card">
+                <span>🍫 Chocolate (R$ 3,50)</span>
+                <input type="number" class="qtd-sabor" data-preco="3.50" min="0" max="10" value="0">
+            </div>
+        </div>
+     
+        <div class="Finalizar">
+            <button type="button" class="btn-finalizar" onclick="calcularESalvar()">Ir para Entrega</button>
+        </div>
+    </section>
+     
+    <script>
+        function calcularESalvar() {
+            let totalAdicionais = 0;
+            let inputs = document.querySelectorAll('.qtd-sabor');
+
+            inputs.forEach(function(input) {
+                let quantidade = parseInt(input.value);
+                let preco = parseFloat(input.getAttribute('data-preco'));
+                
+                if (quantidade > 0) {
+                    totalAdicionais += (quantidade * preco);
+                }
+            });
+
+            let precoBase = 15.00; 
+            let valorFinal = precoBase + totalAdicionais;
+
+            localStorage.setItem('valorTotalPedido', valorFinal.toFixed(2));
+            window.location.href = "entrega.html"; 
+        }
+    </script>
+
+    <a href="acai.html" class="imagem-topo">
+        <img src="logo.png" alt="Logo">
+    </a>
+</body>
+</html>

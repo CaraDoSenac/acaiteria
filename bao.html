@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Pedido</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .pedido-container {
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(7, 7, 7, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+        .titulo {
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+        .resumo-box {
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .linha-resumo {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .linha-resumo span:first-child {
+            color: #333333;
+        }
+        .linha-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #000000;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .titulo-secao {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #5d007a;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+        }
+        .texto-endereco {
+            font-size: 14px;
+            color: #444444;
+            line-height: 1.4;
+        }
+        .opcoes-pagamento {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        .opcao-item {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            padding: 14px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #000;
+            transition: 0.2s, border-color 0.2s;
+        }
+        .opcao-item:hover {
+            background-color: #f9f9f9;
+            border-color: #000000;
+        }
+        .opcao-item input {
+            margin-right: 12px;
+            accent-color: #000000;
+        }
+        .botoes-grupo {
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .btn-cancelar {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .btn-cancelar:hover {
+            background-color: #f0f0f0;
+        }
+        .btn-finalizar {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .btn-finalizar:hover {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="pedido-container">
+        <h2 class="titulo">Finalizar Pedido</h2>
+        
+        <div class="resumo-box">
+            <div class="linha-resumo">
+                <span>Itens e Adicionais</span>
+                <span id="valor-itens-tela">R$ 0,00</span>
+            </div>
+            <div class="linha-resumo">
+                <span>Taxa de Entrega</span>
+                <span>R$ 6,00</span>
+            </div>
+            <div class="linha-total">
+                <span>Total</span>
+                <span id="valor-total-tela">R$ 0,00</span>
+            </div>
+        </div>
+
+        <div class="resumo-box">
+            <div class="titulo-secao">📍 Endereço de Entrega</div>
+            <div id="endereco-tela" class="texto-endereco">
+                Carregando endereço...
+            </div>
+        </div>
+
+        <div class="opcoes-pagamento">
+            <label class="opcao-item">
+                <input type="radio" name="metodo" value="1" checked> Cartão de débito
+            </label>
+            <label class="opcao-item">
+                <input type="radio" name="metodo" value="2"> Pix
+            </label>
+            <label class="opcao-item">
+                <input type="radio" name="metodo" value="3"> Cartão de crédito
+            </label>
+        </div>
+
+        <div class="botoes-grupo">
+            <a href="#" class="btn btn-cancelar" onclick="cancelarPedido(event)">Cancelar</a>
+            <a href="#" class="btn btn-finalizar" onclick="finalizarPedido(event)">Finalizar</a>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            let valorSalvo = localStorage.getItem('valorTotalPedido');
+            if (valorSalvo !== null) {
+                let valorBase = parseFloat(valorSalvo);
+                let taxaEntrega = 6.00;
+                let valorFinal = valorBase + taxaEntrega;
+
+                document.getElementById('valor-itens-tela').innerText = 'R$ ' + valorBase.toFixed(2).replace('.', ',');
+                document.getElementById('valor-total-tela').innerText = 'R$ ' + valorFinal.toFixed(2).replace('.', ',');
+            }
+
+            let enderecoSalvo = localStorage.getItem('enderecoEntrega');
+            if (enderecoSalvo) {
+                let end = JSON.parse(enderecoSalvo);
+                let texto = `<strong>Rua:</strong> ${end.rua}, Nº ${end.numero}<br><strong>Bairro:</strong> ${end.bairro}`;
+                if (end.complemento) texto += `<br><strong>Comp.:</strong> ${end.complemento}`;
+                if (end.referencia) texto += `<br><strong>Ref.:</strong> ${end.referencia}`;
+                document.getElementById('endereco-tela').innerHTML = texto;
+            } else {
+                document.getElementById('endereco-tela').innerText = 'Endereço não informado.';
+            }
+        };
+
+        function finalizarPedido(e) {
+            e.preventDefault();
+            alert('Pedido Finalizado com Sucesso!');
+            localStorage.clear();
+            window.location.href = "acai.html";
+        }
+
+        function cancelarPedido(e) {
+            e.preventDefault();
+            alert('Pedido Cancelado');
+            localStorage.clear();
+            window.location.href = "acai.html";
+        }
+    </script>
+
+    <a href="index.html" class="imagem-topo">
+        <img src="logo.png" alt="Logo">
+    </a>
+</body>
+</html>
