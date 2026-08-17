@@ -10,16 +10,14 @@
     <div class="topo">
         <button type="button" onclick="window.open('', '_self', ''); window.close();" class="btn-sair">Sair</button>
     </div>
-
     <div class="login-box">
         <h2>Login</h2>
-        <form action="acai.html" method="get">
-            <input type="text" name="usuário" placeholder="Nome do usuário" required>  
+        <form onsubmit="event.preventDefault(); window.location.href='acai.html';">
+            <input type="text" name="usuário" placeholder="Nome do usuário" required>
             <input type="password" name="senha" placeholder="senha" required>
             <button type="submit">Entrar</button>
         </form>
     </div>
-
     <a href="index.html" class="imagem-topo">
         <img src="logo.png" alt="Logo">
     </a>
